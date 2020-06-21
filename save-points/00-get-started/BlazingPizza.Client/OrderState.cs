@@ -7,6 +7,8 @@ namespace BlazingPizza.Client
 		public Pizza ConfiguringPizza { get; private set; }
 		
 		public bool ShowingConfigureDialog { get; private set; }
+
+        public bool IsSubmittingPizza { get; private set; }
 		
 		public Order Order { get; private set; } = new Order();
 
@@ -23,6 +25,15 @@ namespace BlazingPizza.Client
             ShowingConfigureDialog = true;        
         }
 
+        public void SubmittingPizza()
+		{
+            IsSubmittingPizza = true;
+		}
+
+        public void PizzaSubmitted()
+		{
+            IsSubmittingPizza = false;
+		}
 
         public void CancelConfiguringPizza()
         {

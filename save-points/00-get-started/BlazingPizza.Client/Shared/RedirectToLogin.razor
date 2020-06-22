@@ -1,0 +1,8 @@
+﻿@inject NavigationManager NavigationManager
+
+@code {
+    override protected void OnInitialized()
+    {
+        NavigationManager.NavigateTo($"authentication/login?=returnUrl={NavigationManager.Uri}");
+    }
+}

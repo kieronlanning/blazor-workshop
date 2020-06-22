@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
@@ -13,9 +14,19 @@ namespace BlazingPizza.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services
-                .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+			var services = builder.Services;			
+            services
+				.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
                 .AddScoped<OrderState>();
+
+			services.AddApiAuthorization<PizzaAuthenticationState>(options =>
+            {
+                options.AuthenticationPaths.LogOutSucceededPath = "";
+            });
+
+            services
+                .AddHttpClient<OrdersClient>(client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
             await builder.Build().RunAsync();
         }
